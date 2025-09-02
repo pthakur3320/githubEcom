@@ -1,6 +1,6 @@
 (function () {
   function getPageType(pathname) {
-    if (pathname === "/" || pathname === "/index.html") return "home";
+    if (pathname === "/githubEcom/" || pathname === "/githubEcom/index.html") return "home";
     if (pathname.indexOf("/shop.html") !== -1) return "plp";
     if (pathname.indexOf("/single-product.html") !== -1) return "pdp";
     if (pathname.indexOf("/cart.html") !== -1) return "cart";
