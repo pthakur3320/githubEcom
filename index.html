@@ -6,8 +6,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-   <!-- 🔹 Load digitalData definition -->
- <script src="js/digitalData.js"></script>
+
+  <!-- Declare digitalData early so Adobe Launch sees it -->
+<script>
+  window.digitalData = { page: {} };
+</script>
+
+<!-- Load your digitalData.js to fill in details after DOM is ready -->
+<script src="js/digitalData.js" defer></script>
 
 
  <!-- ✅ Adobe Launch Embed Code (place as high as possible in <head>) -->

@@ -10,17 +10,19 @@
     return "other";
   }
 
-  window.digitalData = window.digitalData || {};
-  var path = window.location.pathname || "/";
-  var pageType = getPageType(path);
-  var pageName = (document.title || pageType || "page")
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-");
+  // Wait until DOM is ready so document.title is available
+  document.addEventListener("DOMContentLoaded", function () {
+    var path = window.location.pathname || "/";
+    var pageType = getPageType(path);
+    var pageName = (document.title || pageType || "page")
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-");
 
-  window.digitalData.page = {
-    pageName: pageName,
-    pageType: pageType,
-    language: document.documentElement.lang || "en"
-  };
+    window.digitalData.page = {
+      pageName: pageName,
+      pageType: pageType,
+      language: document.documentElement.lang || "en"
+    };
+  });
 })();
