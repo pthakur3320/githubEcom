@@ -1,3 +1,4 @@
+// js/digitalData.js
 (function () {
   function getPageType(pathname) {
     if (pathname === "/githubEcom/" || pathname === "/githubEcom/index.html") return "home";
@@ -10,45 +11,39 @@
     return "other";
   }
 
-  // Initialize digitalData if not already present
+  // Ensure base objects exist early
   window.digitalData = window.digitalData || {};
-
-  // Add a safe events array
+  window.digitalData.page = window.digitalData.page || {};
+  window.digitalData.user = window.digitalData.user || { isLoggedIn: false, userID: null, profile: {} };
   window.digitalData.events = window.digitalData.events || [];
 
-  // Small helper to push events
-  window.digitalData.pushEvent = function (eventName, eventInfo) {
-    var evt = {
-      name: eventName,
-      info: eventInfo || {},
-      timestamp: new Date().toISOString()
+  // Helper to push behavioral events
+  if (typeof window.digitalData.pushEvent !== "function") {
+    window.digitalData.pushEvent = function (eventName, eventInfo) {
+      var evt = Object.assign({ event: eventName, timestamp: new Date().toISOString() }, eventInfo || {});
+      window.digitalData.events.push(evt);
+      // Optional: notify any listeners (e.g., Launch custom code)
+      try { window.dispatchEvent(new CustomEvent("digitalData:eventPushed", { detail: evt })); } catch (e) {}
     };
-    window.digitalData.events.push(evt);
-    console.log("📌 digitalData Event:", evt);
-  };
+  }
 
-  // Default anonymous user
-  window.digitalData.user = {
-    isLoggedIn: false,
-    userID: null,
-    profile: {}
-  };
-
-  // Wait until DOM is ready so document.title is available
+  // Fill page info when DOM is ready (so document.title is populated)
   document.addEventListener("DOMContentLoaded", function () {
     var path = window.location.pathname || "/";
     var pageType = getPageType(path);
-    var pageName = (document.title || pageType || "page")
+    var rawTitle = document.title || pageType || "page";
+    var pageName = rawTitle
       .toLowerCase()
       .trim()
-      .replace(/\s+/g, "-");
+      .replace(/[|]+/g, " ")     // remove pipes
+      .replace(/\s+/g, "-")      // spaces -> hyphen
+      .replace(/[^a-z0-9-]/g, "")// strip other chars
+      .replace(/-+/g, "-");      // collapse multiple -
 
     window.digitalData.page = {
       pageName: pageName,
       pageType: pageType,
       language: document.documentElement.lang || "en"
     };
-
-    console.log("📄 digitalData.page:", window.digitalData.page);
   });
 })();

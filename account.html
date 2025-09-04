@@ -186,23 +186,25 @@
   <!-- ! modal search end -->
 
 
-  <!-- ! account start -->
+    <!-- account start -->
   <section class="account-page">
     <div class="container">
       <div class="account-wrapper">
+
+        <!-- LOGIN -->
         <div class="account-column">
           <h2>Login</h2>
-          <form>
+          <form id="loginForm" novalidate>
             <div>
               <label>
                 <span>Username or email address <span class="required">*</span></span>
-                <input type="text">
+                <input type="text" id="loginUserId" placeholder="e.g. temp1">
               </label>
             </div>
             <div>
               <label>
                 <span>Password <span class="required">*</span></span>
-                <input type="password">
+                <input type="password" id="loginPassword">
               </label>
             </div>
             <p class="remember">
@@ -210,30 +212,32 @@
                 <input type="checkbox">
                 <span>Remember Me</span>
               </label>
-              <button class="btn btn-sm">Login</button>
+              <button class="btn btn-sm" type="submit">Login</button>
             </p>
             <a href="#" class="form-link">Lost your password?</a>
           </form>
         </div>
+
+        <!-- REGISTER -->
         <div class="account-column">
           <h2>Register</h2>
-          <form>
+          <form id="registerForm" novalidate>
             <div>
               <label>
                 <span>Username <span class="required">*</span></span>
-                <input type="text">
+                <input type="text" id="registerUsername" placeholder="Your name">
               </label>
             </div>
             <div>
               <label>
                 <span>Email Address <span class="required">*</span></span>
-                <input type="email">
+                <input type="email" id="registerEmail" placeholder="you@example.com">
               </label>
             </div>
             <div>
               <label>
                 <span>Password <span class="required">*</span></span>
-                <input type="password">
+                <input type="password" id="registerPassword">
               </label>
             </div>
             <div class="privacy-policy-text remember">
@@ -241,14 +245,15 @@
                 Your personal data will be used to support your experience throughout this website, to manage access to
                 your account, and for other purposes described in our <a href="#">privacy policy</a>.
               </p>
-              <button class="btn btn-sm">Register</button>
+              <button class="btn btn-sm" type="submit">Register</button>
             </div>
           </form>
         </div>
+
       </div>
     </div>
   </section>
-  <!-- ! account end -->
+  <!-- account end -->
 
   <!-- ! policy start -->
   <section class="policy">
@@ -478,41 +483,57 @@
   <!-- scripts start -->
   <script src="js/main.js" type="module"></script>
   <!-- scripts end -->
-   <!-- ✅ Mock Auth Handlers -->
-  <script>
+   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // Login
-      document.getElementById("loginForm").addEventListener("submit", function (e) {
-        e.preventDefault();
-        const username = document.getElementById("login-username").value;
+      // LOGIN
+      const loginForm = document.getElementById("loginForm");
+      const loginUserId = document.getElementById("loginUserId");
 
-        window.digitalData.user = {
-          isLoggedIn: true,
-          userID: username,
-          profile: { type: "login" }
-        };
-        window.digitalData.pushEvent("userLogin", { userID: username });
-        alert("Mock login successful for: " + username);
-      });
+      if (loginForm && loginUserId) {
+        loginForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const id = (loginUserId.value || "").trim();
+          if (!id) { alert("Enter a User ID or email"); return; }
 
-      // Register
-      document.getElementById("registerForm").addEventListener("submit", function (e) {
-        e.preventDefault();
-        const username = document.getElementById("register-username").value;
-        const email = document.getElementById("register-email").value;
+          window.digitalData.user = window.digitalData.user || { profile: {} };
+          window.digitalData.user.isLoggedIn = true;
+          window.digitalData.user.userID = id;
+          window.digitalData.user.profile = window.digitalData.user.profile || {};
+          // push a behavioral event
+          if (window.digitalData.pushEvent) {
+            window.digitalData.pushEvent("login", { userID: id });
+          }
+          alert("Logged in as " + id);
+          console.log("digitalData after login:", window.digitalData);
+        });
+      }
 
-        window.digitalData.user = {
-          isLoggedIn: true,
-          userID: username,
-          profile: { email: email, type: "registered" }
-        };
-        window.digitalData.pushEvent("userRegister", { userID: username, email: email });
-        alert("Mock registration successful for: " + username);
-      });
+      // REGISTER
+      const registerForm = document.getElementById("registerForm");
+      const registerUsername = document.getElementById("registerUsername");
+      const registerEmail = document.getElementById("registerEmail");
+
+      if (registerForm && registerUsername && registerEmail) {
+        registerForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const name = (registerUsername.value || "").trim();
+          const email = (registerEmail.value || "").trim();
+          if (!email) { alert("Enter an email address"); return; }
+
+          window.digitalData.user = window.digitalData.user || { profile: {} };
+          window.digitalData.user.isLoggedIn = true;
+          window.digitalData.user.userID = email; // use email as login ID
+          window.digitalData.user.profile = Object.assign({}, window.digitalData.user.profile, {
+            name: name || undefined
+          });
+          if (window.digitalData.pushEvent) {
+            window.digitalData.pushEvent("register", { userID: email, name: name || undefined });
+          }
+          alert("Registered & logged in as " + email);
+          console.log("digitalData after register:", window.digitalData);
+        });
+      }
     });
-  </script>
-  <!-- scripts end -->
-
-</body>
-
+    </script>
+  </body>
 </html>
