@@ -478,6 +478,41 @@
   <!-- scripts start -->
   <script src="js/main.js" type="module"></script>
   <!-- scripts end -->
+   <!-- ✅ Mock Auth Handlers -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Login
+      document.getElementById("loginForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const username = document.getElementById("login-username").value;
+
+        window.digitalData.user = {
+          isLoggedIn: true,
+          userID: username,
+          profile: { type: "login" }
+        };
+        window.digitalData.pushEvent("userLogin", { userID: username });
+        alert("Mock login successful for: " + username);
+      });
+
+      // Register
+      document.getElementById("registerForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const username = document.getElementById("register-username").value;
+        const email = document.getElementById("register-email").value;
+
+        window.digitalData.user = {
+          isLoggedIn: true,
+          userID: username,
+          profile: { email: email, type: "registered" }
+        };
+        window.digitalData.pushEvent("userRegister", { userID: username, email: email });
+        alert("Mock registration successful for: " + username);
+      });
+    });
+  </script>
+  <!-- scripts end -->
+
 </body>
 
 </html>

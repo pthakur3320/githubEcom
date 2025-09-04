@@ -10,6 +10,30 @@
     return "other";
   }
 
+  // Initialize digitalData if not already present
+  window.digitalData = window.digitalData || {};
+
+  // Add a safe events array
+  window.digitalData.events = window.digitalData.events || [];
+
+  // Small helper to push events
+  window.digitalData.pushEvent = function (eventName, eventInfo) {
+    var evt = {
+      name: eventName,
+      info: eventInfo || {},
+      timestamp: new Date().toISOString()
+    };
+    window.digitalData.events.push(evt);
+    console.log("📌 digitalData Event:", evt);
+  };
+
+  // Default anonymous user
+  window.digitalData.user = {
+    isLoggedIn: false,
+    userID: null,
+    profile: {}
+  };
+
   // Wait until DOM is ready so document.title is available
   document.addEventListener("DOMContentLoaded", function () {
     var path = window.location.pathname || "/";
@@ -24,5 +48,7 @@
       pageType: pageType,
       language: document.documentElement.lang || "en"
     };
+
+    console.log("📄 digitalData.page:", window.digitalData.page);
   });
 })();
