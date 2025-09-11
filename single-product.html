@@ -570,6 +570,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </section>
     <!-- ! single product end -->
 
+    <script>
+window.dataLayer = window.dataLayer || [];
+dataLayer.push({ ecommerce: null }); // Clear previous ecommerce
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Extract product info
+  var name = document.querySelector(".product-title")?.innerText.trim() || "Unknown";
+  var sku = document.querySelector(".product-sku a")?.innerText.trim() || "No SKU";
+  var priceText = document.querySelector(".new-price")?.innerText.replace(/[^0-9.]/g, "") || "0";
+  var price = parseFloat(priceText);
+
+  var category = document.querySelector(".product-categories a")?.innerText.trim() || "Uncategorized";
+  var brand = "GitHub Ecom"; // Static brand for now, can be dynamic if you have it
+  var quantity = 1; // PDP default
+
+  // Push GA4 view_item event
+  dataLayer.push({
+    event: "view_item",
+    ecommerce: {
+      currency: "USD",
+      value: price,
+      items: [
+        {
+          item_id: sku,
+          item_name: name,
+          item_brand: brand,
+          item_category: category,
+          price: price,
+          quantity: quantity
+        }
+      ]
+    }
+  });
+
+  console.log("GA4 view_item pushed:", name, price, sku, category);
+});
+</script>
+
+
     <!-- ! campaign single start -->
     <section class="campaign-single">
         <div class="container">
