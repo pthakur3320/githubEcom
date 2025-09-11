@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var pageName = document.title || pageType || "page";
 
   dataLayer.push({
-    event: "page_view",
+    event: "virtual_page_view",
     page: {
       pageName: pageName,
       pageType: pageType,
