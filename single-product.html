@@ -21,6 +21,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-KTFTTWDQ');</script>
 <!-- End Google Tag Manager -->
 
+<script>
+if (window.dataLayer) {
+  if (!window.dataLayer.__oldPush) {
+    window.dataLayer.__oldPush = window.dataLayer.push;
+
+    window.dataLayer.push = function (payload) {
+      if (payload.event && typeof payload.event === "string") {
+        // Fire Adobe Launch Direct Call Rule
+        _satellite.track(payload.event, payload);
+      }
+      // Hand back to GTM as usual
+      window.dataLayer.__oldPush(payload);
+    };
+  }
+}
+</script>
+
+
  <!-- ✅ Adobe Launch Embed Code (place as high as possible in <head>) -->
   <script src="https://assets.adobedtm.com/161206a90d6a/1561b8c7fd57/launch-7c0d6c918e61-development.min.js" async></script>
     <!-- ✅ End Adobe Launch -->
